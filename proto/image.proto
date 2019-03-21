@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package ImageService;
+
+service ImageService {
+    rpc GetImage (ImageRequest) returns (ImageResponse) {};
+}
+
+message ImageRequest {
+    string path = 1;
+}
+
+message ImageResponse {
+    string path = 1;
+}
