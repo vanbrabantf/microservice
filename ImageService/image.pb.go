@@ -3,10 +3,13 @@
 
 package ImageService
 
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
+
 import (
-	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	math "math"
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -18,7 +21,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type ImageRequest struct {
 	Path                 string   `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
@@ -31,17 +34,16 @@ func (m *ImageRequest) Reset()         { *m = ImageRequest{} }
 func (m *ImageRequest) String() string { return proto.CompactTextString(m) }
 func (*ImageRequest) ProtoMessage()    {}
 func (*ImageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9624c68e2b547544, []int{0}
+	return fileDescriptor_image_36aae1f1108aa794, []int{0}
 }
-
 func (m *ImageRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ImageRequest.Unmarshal(m, b)
 }
 func (m *ImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ImageRequest.Marshal(b, m, deterministic)
 }
-func (m *ImageRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ImageRequest.Merge(m, src)
+func (dst *ImageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageRequest.Merge(dst, src)
 }
 func (m *ImageRequest) XXX_Size() int {
 	return xxx_messageInfo_ImageRequest.Size(m)
@@ -70,17 +72,16 @@ func (m *ImageResponse) Reset()         { *m = ImageResponse{} }
 func (m *ImageResponse) String() string { return proto.CompactTextString(m) }
 func (*ImageResponse) ProtoMessage()    {}
 func (*ImageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9624c68e2b547544, []int{1}
+	return fileDescriptor_image_36aae1f1108aa794, []int{1}
 }
-
 func (m *ImageResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ImageResponse.Unmarshal(m, b)
 }
 func (m *ImageResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	return xxx_messageInfo_ImageResponse.Marshal(b, m, deterministic)
 }
-func (m *ImageResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ImageResponse.Merge(m, src)
+func (dst *ImageResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ImageResponse.Merge(dst, src)
 }
 func (m *ImageResponse) XXX_Size() int {
 	return xxx_messageInfo_ImageResponse.Size(m)
@@ -103,9 +104,81 @@ func init() {
 	proto.RegisterType((*ImageResponse)(nil), "ImageService.ImageResponse")
 }
 
-func init() { proto.RegisterFile("image.proto", fileDescriptor_9624c68e2b547544) }
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
 
-var fileDescriptor_9624c68e2b547544 = []byte{
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// ImageServiceClient is the client API for ImageService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type ImageServiceClient interface {
+	GetImage(ctx context.Context, in *ImageRequest, opts ...grpc.CallOption) (*ImageResponse, error)
+}
+
+type imageServiceClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewImageServiceClient(cc *grpc.ClientConn) ImageServiceClient {
+	return &imageServiceClient{cc}
+}
+
+func (c *imageServiceClient) GetImage(ctx context.Context, in *ImageRequest, opts ...grpc.CallOption) (*ImageResponse, error) {
+	out := new(ImageResponse)
+	err := c.cc.Invoke(ctx, "/ImageService.ImageService/GetImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ImageServiceServer is the server API for ImageService service.
+type ImageServiceServer interface {
+	GetImage(context.Context, *ImageRequest) (*ImageResponse, error)
+}
+
+func RegisterImageServiceServer(s *grpc.Server, srv ImageServiceServer) {
+	s.RegisterService(&_ImageService_serviceDesc, srv)
+}
+
+func _ImageService_GetImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageServiceServer).GetImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ImageService.ImageService/GetImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageServiceServer).GetImage(ctx, req.(*ImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _ImageService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "ImageService.ImageService",
+	HandlerType: (*ImageServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetImage",
+			Handler:    _ImageService_GetImage_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "image.proto",
+}
+
+func init() { proto.RegisterFile("image.proto", fileDescriptor_image_36aae1f1108aa794) }
+
+var fileDescriptor_image_36aae1f1108aa794 = []byte{
 	// 127 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0xcc, 0x4d, 0x4c,
 	0x4f, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0xf1, 0x04, 0x71, 0x82, 0x53, 0x8b, 0xca,

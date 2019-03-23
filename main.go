@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/disintegration/gift"
+	pb "github.com/vanbrabantf/microservice/ImageService"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"image"
@@ -11,7 +13,6 @@ import (
 	"net"
 	"os"
 	"time"
-	"github.com/disintegration/gift"
 )
 
 type server struct{}
@@ -25,6 +26,7 @@ func main() {
 
 	s := grpc.NewServer()
 
+	pb.RegisterImageServiceServer(s, &server{})
 	reflection.Register(s)
 
 	if err := s.Serve(lis); err != nil {
@@ -32,11 +34,11 @@ func main() {
 	}
 }
 
-func (s *server) GetImage(ctx context.Context, req *ImageRequest) (*ImageResponse, error) {
+func (s *server) GetImage(ctx context.Context, req *pb.ImageRequest) (*pb.ImageResponse, error) {
 	p := updateImage()
 	log.Println("Call")
 
-	return &ImageResponse{Path: p}, nil
+	return &pb.ImageResponse{Path: p}, nil
 }
 
 func updateImage() string {
